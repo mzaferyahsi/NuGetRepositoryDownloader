@@ -22,12 +22,12 @@ namespace NuGetRepositoryDownloader
                 Console.WriteLine("Please provide valid values.");
                 return;
             }
-            if (string.IsNullOrEmpty(options.Repository.Trim()))
+            if (string.IsNullOrEmpty(options.Repository))
             {
                 Console.WriteLine("Invalid repository address.");
                 return;
             }
-            if (!string.IsNullOrEmpty(options.Path.Trim()))
+            if (!string.IsNullOrEmpty(options.Path))
             {
                 if (!Directory.Exists(options.Path))
                     Directory.CreateDirectory(options.Path);
@@ -36,12 +36,12 @@ namespace NuGetRepositoryDownloader
             IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(options.Repository);
             IEnumerable<IPackage> packages = null;
 
-            if (string.IsNullOrEmpty(options.PackageId.Trim()) && string.IsNullOrEmpty(options.Version.Trim()))
+            if (string.IsNullOrEmpty(options.PackageId) && string.IsNullOrEmpty(options.Version))
                 packages = repo.GetPackages();
-            else if (!string.IsNullOrEmpty(options.PackageId.Trim()))
+            else if (!string.IsNullOrEmpty(options.PackageId))
                 packages = repo.FindPackagesById(options.PackageId);
 
-            if (!string.IsNullOrEmpty(options.Version.Trim()))
+            if (!string.IsNullOrEmpty(options.Version))
                 packages = packages.Where(p => p.Version == NuGet.SemanticVersion.Parse(options.Version));
 
             foreach (var pkg in packages)
@@ -77,16 +77,16 @@ namespace NuGetRepositoryDownloader
 
     class ProgramOptions
     {
-        [Option("repo", Required = true, HelpText = "NuGet repository path.")]
+        [Option('r', Required = true, HelpText = "NuGet repository path.")]
         public string Repository { get; set; }
 
-        [Option("path", Required = false, HelpText = "Path to download packages.")]
+        [Option('p', Required = false, HelpText = "Path to download packages.")]
         public string Path { get; set; }
 
-        [Option("package", Required = false, HelpText = "Package id.")]
+        [Option('i', Required = false, HelpText = "Package id.")]
         public string PackageId { get; set; }
 
-        [Option("version", Required = false, HelpText = "Package version.")]
+        [Option('v', Required = false, HelpText = "Package version.")]
         public string Version { get; set; }
     }
 }
